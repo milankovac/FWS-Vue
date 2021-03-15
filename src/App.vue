@@ -1,13 +1,23 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+   <Nav></Nav>
+   <Search></Search>
+   <all-product></all-product>
   </div>
 </template>
-
+<script>
+import Nav from './components/Nav'
+import Search from '@/components/Search'
+import AllProduct from '@/components/AllProduct'
+export default {
+  components:{
+    Nav:Nav,
+    Search:Search,
+    AllProduct:AllProduct
+  }
+  
+}
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -29,4 +39,5 @@
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
 </style>
