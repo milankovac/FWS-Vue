@@ -12,9 +12,7 @@ export default{
         getAllproduct({commit}){
             AllProduct.getAllproduct().then(response=>{
                 commit('SET_PRODUCT',response.data);
-     
             });
-        
         }
     },
     getters:{

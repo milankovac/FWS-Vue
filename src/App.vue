@@ -1,20 +1,27 @@
 <template>
   <div id="app">
    <Nav></Nav>
-   <Search></Search>
-   <all-product></all-product>
+   <all-product :product="product" :total="total" ></all-product>
   </div>
 </template>
 <script>
 import Nav from './components/Nav'
-import Search from '@/components/Search'
 import AllProduct from '@/components/AllProduct'
 export default {
   components:{
     Nav:Nav,
-    Search:Search,
     AllProduct:AllProduct
-  }
+  },
+  computed:{
+        product(){
+            return this.$store.getters.getAllProduct;
+        },
+        total(){
+          return this.$store.getters.getTotal;
+        },
+    
+    },
+   
   
 }
 </script>
