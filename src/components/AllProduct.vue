@@ -1,7 +1,10 @@
 <template>
 <div class="allProduct">
 <div class="search">
-<button data-toggle="modal"  data-target="#exampleModal" class="total_cart">View <font-awesome-icon icon="shopping-cart"  /></button>
+<div class="total_div">
+<button data-toggle="modal"  data-target="#exampleModal" class="total_cart"><font-awesome-icon icon="shopping-cart"  />  View </button>
+<p>Total:<br><span>${{total}}</span></p>
+</div>
 
 <form>
 <div class="inputContainer">
@@ -36,8 +39,10 @@
             <td v-else>-</td>
             <td v-if="p.sale_price">${{p.sale_price}}</td>
             <td v-else>-</td>
-            <td ><input :id="p.id" class="number" type="number" value="0" min="0" v-model="p.qty" ></td>
-            <td @click="addToCart(p)"><button class="add_cart">ADD <font-awesome-icon icon="shopping-cart" /></button></td>
+            <td ><input v-if="p.sale_price||p.regular_price" :id="p.id" class="number" type="number" value="0" min="0" v-model="p.qty" ></td>
+            
+            <td v-if="!getIteminCart.some(data=>data.id===p.id)" @click="addToCart(p)"><button v-if="p.sale_price||p.regular_price" class="add_cart">ADD <font-awesome-icon icon="shopping-cart" /></button></td>
+            <td v-else><button v-if="p.sale_price||p.regular_price"  class="add_cart" @click="checkout">ADDED <font-awesome-icon icon="check" /></button></td>
             </tr>
          
         </tbody>
@@ -59,8 +64,11 @@
             <tr  v-for="item in getIteminCart" :key="item.id">
             <td><img class="main_image" v-bind:src="item.main_image"></td>
             <td>{{item.title}}</td>
-            <td>$ {{(item.regular_price*item.qty).toFixed(2)}}</td>
-             <td ><input :id="item.id" class="number" type="number" value="0" min="0" v-model="item.qty" ></td>
+            <td v-if="item.regular_price&& !item.sale_price">$ {{item.regular_price}}</td>
+             <td v-if="item.sale_price">$ {{item.sale_price}}</td>
+            
+            <td ><input :id="item.id" class="number" type="number" value="0" min="0" v-model="item.qty" ></td>
+            <td @click="removeToCart(item.id)"><i class="fa fa-trash" aria-hidden="true"></i></td>
             </tr>
            
           </tbody>
@@ -70,8 +78,9 @@
       </div>
       <div class="modal-footer">
         <p  v-if="getIteminCart.length!==0" class="pay">Total for pay :<span> ${{total}}</span> </p>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
- 
+        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-minus-circle" aria-hidden="true"></i> Close</button>
+        <button v-if="getIteminCart.length!==0" @click="checkout" type="button" class="btn btn-success" ><i class="fa fa-check-square"></i> Checkout</button>
+
       </div>
     </div>
   </div>
@@ -101,14 +110,21 @@ export default {
         total(){
          let total=0;
           this.getIteminCart.forEach(item=>{
-              total+=(item.regular_price*item.qty)
+              if(item.sale_price)
+              {
+                total+=item.sale_price*item.qty
+              }else{
+                   total+=item.regular_price*item.qty
+              }
+              
           });
           return total.toFixed(2);
         },
         getTotal()
         {
             return this.$store.getters.getTotal;
-        }   
+        }  
+     
     },
     methods:{
         addToCart(itemtoAdd){
@@ -118,9 +134,20 @@ export default {
           {
               this.itemInCart[0].qty += this.itemToAdd.qty;
           }
-        this.$store.commit('UPDATE_CART',this.itemInCart)
+          this.$store.commit('UPDATE_CART',this.itemInCart)
        
           
+        },
+        removeToCart(itemtoRemove)
+        {
+         this.$store.commit('REMOVE_TO_CART',itemtoRemove)
+        
+        
+        },
+        checkout(){
+            console.log(this.getIteminCart);
+            this.$store.commit('CHECKOUT',[]);
+
         }
     },
   
@@ -129,6 +156,24 @@ export default {
 </script>
 
 <style >
+.total_div{
+    position: absolute;
+    right:0%;
+    top:0%;
+    padding: 5px;
+    
+   
+}
+.total_div>p
+{
+    position: relative;
+    color:#2e3e5f ;
+}
+.total_div>p>span{
+
+color: #b4937f;
+font-weight: bold;
+}
 .pay{
     position: absolute;
     left: 0;
@@ -205,10 +250,8 @@ form {
    border: none;
    border-radius: 5px;
 }
-.total_cart{
-position: absolute;
-    left: 92%;
-    top: 19%;
- 
+.fa-trash:hover{
+    color: red;
 }
+
 </style>

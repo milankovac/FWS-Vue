@@ -4,9 +4,9 @@ import router from './router'
 import store from './store'
 import '../node_modules/bootstrap/dist/css/bootstrap.css'; 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faShoppingCart,faSearch} from '@fortawesome/free-solid-svg-icons'
+import { faShoppingCart,faSearch,faCheck} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-library.add(faShoppingCart,faSearch)
+library.add(faShoppingCart,faSearch,faCheck)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false
