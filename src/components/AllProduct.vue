@@ -3,7 +3,7 @@
 <div class="search">
 <div class="total_div">
 <button data-toggle="modal"  data-target="#exampleModal" class="total_cart"><font-awesome-icon icon="shopping-cart"  />  View </button>
-<p>Total:<br><span>${{total}}</span></p>
+<p>Total: <span>{{total}}</span></p>
 </div>
 
 <form>
@@ -42,7 +42,7 @@
             <td ><input v-if="p.sale_price||p.regular_price" :id="p.id" class="number" type="number" value="0" min="0" v-model="p.qty" ></td>
             
             <td v-if="!getIteminCart.some(data=>data.id===p.id)" @click="addToCart(p)"><button v-if="p.sale_price||p.regular_price" class="add_cart">ADD <font-awesome-icon icon="shopping-cart" /></button></td>
-            <td v-else><button v-if="p.sale_price||p.regular_price"  class="add_cart" @click="checkout">ADDED <font-awesome-icon icon="check" /></button></td>
+            <td v-else><button v-if="p.sale_price||p.regular_price"  class="add_cart" >ADDED <font-awesome-icon icon="check" /></button></td>
             </tr>
          
         </tbody>
@@ -79,7 +79,7 @@
       <div class="modal-footer">
         <p  v-if="getIteminCart.length!==0" class="pay">Total for pay :<span> ${{total}}</span> </p>
         <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-minus-circle" aria-hidden="true"></i> Close</button>
-        <button v-if="getIteminCart.length!==0" @click="checkout" type="button" class="btn btn-success" ><i class="fa fa-check-square"></i> Checkout</button>
+        <button v-if="getIteminCart.length!==0" type="button" class="btn btn-success"  @click="checkout" ><i class="fa fa-check-square"></i> Checkout</button>
 
       </div>
     </div>
@@ -109,7 +109,7 @@ export default {
         },
         total(){
          let total=0;
-          this.getIteminCart.forEach(item=>{
+         this.getIteminCart.forEach(item=>{
               if(item.sale_price)
               {
                 total+=item.sale_price*item.qty
@@ -134,7 +134,9 @@ export default {
           {
               this.itemInCart[0].qty += this.itemToAdd.qty;
           }
+        
           this.$store.commit('UPDATE_CART',this.itemInCart)
+         
        
           
         },
@@ -145,7 +147,10 @@ export default {
         
         },
         checkout(){
-            console.log(this.getIteminCart);
+            this.$store.commit('SET_ORDERS',this.getIteminCart);
+            this.$store.commit('SET_TOTAL',this.total)
+            this.$store.dispatch('makeOrder');
+            
             this.$store.commit('CHECKOUT',[]);
 
         }

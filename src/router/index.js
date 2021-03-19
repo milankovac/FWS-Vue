@@ -1,23 +1,55 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+
+import Login from '@/components/Login'
+import AllProduct from '@/components/AllProduct'
+import Home from '@/components/Home'
+import ResetPassword from '@/components/ResetPassword'
+import ForgotPassword from '@/components/ForgotPassword'
+import ForgotPasswordInput from '@/components/ForgotPasswordInput'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home
+    path: '/login',
+    name:'Login',
+    component: Login,
+    props:true
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/products',
+    name:'Products',
+    component: AllProduct,
+    props:true,
+    
+  },
+  {
+    path: '/',
+    name:'Home',
+    component: Home,
+    props:true,
+  },
+  {
+    path: '/reset',
+    name:'ResetPassword',
+    component: ResetPassword,
+    props:true,
+  },
+  {
+    path: '/forgot',
+    name:'ResetPassword',
+    component: ForgotPassword,
+    props:true,
+  },
+  {
+    path: '/forgotPassword'+localStorage.getItem('forgottoken'),
+    name:'Forgot Password',
+    component: ForgotPasswordInput,
+    props:true,
   }
+
+
 ]
 
 const router = new VueRouter({
@@ -26,4 +58,15 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to,from,next)=>{
+  const publicPages = ['/login', '/','/forgot','/forgotPassword'+localStorage.getItem('forgottoken')];
+  const authRequired = !publicPages.includes(to.path);
+  const loggedIn = localStorage.getItem('token');
+  if (authRequired && !loggedIn) {
+    next('/login');
+  } else {
+    next();
+  }
+
+})
 export default router

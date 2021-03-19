@@ -7,6 +7,9 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faShoppingCart,faSearch,faCheck} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(faShoppingCart,faSearch,faCheck)
+import VueSimpleAlert from "vue-simple-alert";
+
+Vue.use(VueSimpleAlert);
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false

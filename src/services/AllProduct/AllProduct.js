@@ -1,6 +1,6 @@
 import Axios from '../axios'
 export default{
     getAllproduct(){
-       return Axios.get('custom_product');
+       return Axios.get('wp/v2/custom_product');
     }
 }

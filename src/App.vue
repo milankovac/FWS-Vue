@@ -1,16 +1,16 @@
 <template>
   <div id="app">
    <Nav></Nav>
-   <all-product :product="product" :total="total" ></all-product>
+   <router-view :product="product" :total="total"></router-view>
   </div>
 </template>
 <script>
 import Nav from './components/Nav'
-import AllProduct from '@/components/AllProduct'
+
 export default {
   components:{
     Nav:Nav,
-    AllProduct:AllProduct
+
   },
   computed:{
         product(){
